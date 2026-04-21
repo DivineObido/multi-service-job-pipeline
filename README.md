@@ -1,10 +1,9 @@
-# Job Processing Platform
+# Multi-service Job Pipeline
 
 A multi-service job processing application where users can submit jobs through a web dashboard and track them in real time. When a job is submitted, it gets queued in Redis, picked up by a background worker, processed, and the status updates to completed on the dashboard.
 
 This repository is a forked and fixed version of [chukwukelu2023/hng14-stage2-devops](https://github.com/chukwukelu2023/hng14-stage2-devops). The original source code contained bugs and misconfigurations that were identified, fixed, and documented in [FIXES.md](./FIXES.md).
 
----
 
 ## Architecture
 
@@ -14,8 +13,6 @@ The application is made up of four services that communicate over a shared inter
 - **API** — Python/FastAPI service on port 8000. Creates jobs, pushes them to Redis, and serves status updates.
 - **Worker** — Python background service. Polls Redis for new jobs, processes them, and updates their status to completed.
 - **Redis** — In-memory data store used as both a job queue and a status store. Not exposed outside the internal network.
-
----
 
 ## Prerequisites
 
