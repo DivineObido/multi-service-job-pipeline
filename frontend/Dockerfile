@@ -1,5 +1,5 @@
 # Builder stage
-FROM node:20-slim AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -8,12 +8,12 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 # Final stage
-FROM node:20-slim
+FROM node:20-alpine
 
 WORKDIR /app
 
-RUN groupadd --system appgroup && \
-    useradd --system --gid appgroup appuser
+RUN addgroup -S appgroup && \
+    adduser -S -G appgroup appuser
 
 # Copy installed dependencies from builder
 COPY --from=builder /app/node_modules ./node_modules
@@ -23,7 +23,7 @@ COPY app.js .
 COPY views/ ./views
 COPY package.json .
 
-# Switch to non-rooot user
+# Switch to non-root user
 USER appuser
 
 EXPOSE 3000

@@ -1,5 +1,5 @@
 # Build Stage
-FROM python:3.11-slim AS builder
+FROM python:3.11-alpine AS builder
 
 WORKDIR /app
 
@@ -8,13 +8,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --prefix=/install -r requirements.txt
 # Final Stage
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
 WORKDIR /app
 
 # Create non-root user
-RUN addgroup --system appgroup && \
-    adduser --system --ingroup appgroup appuser
+RUN addgroup -S appgroup && \
+    adduser -S -G appgroup appuser
 
 # Copy installed dependencies from builder
 COPY --from=builder /install /usr/local
