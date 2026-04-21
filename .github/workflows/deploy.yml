@@ -45,8 +45,7 @@ jobs:
 
       - name: Lint frontend with eslint
         working-directory: frontend
-        run: npx eslint app.js --env node --env es2021 --parser-options=ecmaVersion:2021
-
+        run: npx eslint app.js
       - name: Install hadolint
         run: |
           wget -O hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
@@ -206,7 +205,9 @@ jobs:
         run: |
           echo "Waiting for services..."
           sleep 30
-
+      - name: Install jq
+        run: sudo apt-get install -y jq
+        
       - name: Submit a job and verify completion
         run: |
           JOB_ID=$(curl -s -X POST http://localhost:3000/submit | jq -r '.job_id')
@@ -244,6 +245,11 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
+          if [ -z "$DEPLOY_HOST" ]; then
+            echo "No deploy target configured, skipping"
+            exit 0
+          fi
+          
           echo "$DEPLOY_KEY" > deploy_key
           chmod 600 deploy_key
 
