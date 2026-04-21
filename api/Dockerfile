@@ -1,14 +1,14 @@
 # Build Stage
-FROM python:3.11-alpine3.22 AS builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install upgrade && pip install update \
-    pip install --no-cache-dr --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Final Stage
-FROM python:3.11-alphine
+    # Final Stage
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -30,5 +30,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 
-
-CMD [ "uvicorn". "main:app", "--host", "0.0.0.0", "--port", "8000" ]
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]

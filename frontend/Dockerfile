@@ -1,18 +1,18 @@
 # Builder stage
-FROM node:lts-alpine3.22 AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
 # Copy packages file
-COPY packages*.json ./
-RUN npm ci --only=production
+COPY package*.json ./
+RUN npm ci --omit=dev
 
 # Final stage
-FROM node:lts-alpine3.22 
+FROM node:20-slim
 
 WORKDIR /app
 
-RUN groupadd --system appgroupp && \
+RUN groupadd --system appgroup && \
     useradd --system --gid appgroup appuser
 
 # Copy installed dependencies from builder
@@ -31,4 +31,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) })"
 
-CMD [ "node", "app.jjs" ]
+CMD [ "node", "app.js" ]

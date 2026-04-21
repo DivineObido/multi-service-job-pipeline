@@ -8,8 +8,8 @@ import signal
 load_dotenv()
 
 r = redis.Redis(
-    host="localhost",
-    # host=os.getenv("REDIS_HOST", "redis"),
+    # host="localhost",
+    host=os.getenv("REDIS_HOST", "redis"),
     port=int(os.getenv("REDIS_PORT", 6379)),
     password=os.getenv("REDIS_PASSWORD", None)
     )

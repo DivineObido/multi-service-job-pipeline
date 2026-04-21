@@ -1,14 +1,13 @@
 # Build Stage
-FROM python:3.11-alpine3.22 AS builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install upgrade && pip install update \
-    pip install --no-cache-dr --prefix=/install -r requirements.txt
-
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --prefix=/install -r requirements.txt
 # Final Stage
-FROM python:3.11-alphine
+FROM python:3.11-slim
 
 WORKDIR /app
 
